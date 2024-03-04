@@ -10,6 +10,7 @@ public class Calculator {
 	class Motorist {
 		private int points;
 		private	int age;
+		
 		public Motorist(int age) {
 			this.points = 0;
 			this.age = age;
@@ -26,34 +27,42 @@ public class Calculator {
 		
 		public RiskFactor calculateMotoristRisk() {
 			if(points > 3 || age < 25)
-				return RiskFactor.HIGH_RISK;
+				return new HIGH_RISK();
 			if(points > 0)
-				return RiskFactor.MODERATE_RISK;
+				return new MODERATE_RISK();
 			
-			return RiskFactor.LOW_RISK;
+			return new LOW_RISK();
 		}
 		
 		public double calculateInsurancePremium(double insuranceValue) {
 			RiskFactor riskFactor = calculateMotoristRisk();
-			return riskFactor.getRisk() * insuranceValue;
+			return riskFactor.calculateInsurancePremium(insuranceValue);
 		}
 		
 	}
 	
-	enum RiskFactor {
-		LOW_RISK(0.02),
-		MODERATE_RISK(0.04),
-		HIGH_RISK(0.06);
-
-		private double risk;
-
-		RiskFactor(double risk) {
-			this.risk = risk;
+	// Polymorphism 
+	public abstract class RiskFactor{
+		public abstract double calculateInsurancePremium(double insuranceValue);
+	}
+	
+	public class LOW_RISK extends RiskFactor{
+		@Override
+		public double calculateInsurancePremium(double insuranceValue) {
+			return insuranceValue * 0.02;
 		}
-		public double getRisk() {
-			return risk;
+	}
+	public class MODERATE_RISK extends RiskFactor{
+		@Override
+		public double calculateInsurancePremium(double insuranceValue) {
+			return insuranceValue * 0.04;
 		}
-		
+	}
+	public class HIGH_RISK extends RiskFactor{
+		@Override
+		public double calculateInsurancePremium(double insuranceValue) {
+			return insuranceValue * 0.06;
+		}
 	}
 	
 	public void test(){
